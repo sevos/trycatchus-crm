@@ -44,4 +44,7 @@ group :development, :test do
 
   # Test framework
   gem 'rspec-rails'
+
+  # Fixtures replacement
+  gem 'factory_girl_rails'
 end
