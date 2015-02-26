@@ -49,4 +49,39 @@ RSpec.describe '/contacts' do
       end
     end
   end
+
+  describe 'PATCH /contacts/:id.json' do
+    let!(:contact) { create(:contact) }
+
+    subject { patch "/contacts/#{contact.id}", {object_name => attributes, format: 'json'} }
+
+    context 'with valid attributes' do
+      let(:attributes) { {'name' => 'TryCatch.us'} }
+
+      it 'updates contact name' do
+        expect { subject }.to change { contact.reload.name }.to 'TryCatch.us'
+      end
+
+      it 'responds with new record' do
+        expected = contact.attributes.slice(*visible_attributes).
+                   merge('name' => 'TryCatch.us')
+        subject
+        expect(json_object).to eq(expected)
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:attributes) { { 'name' => '', 'description' => "won't work"} }
+
+      it 'does not update contact' do
+        expect { subject }.not_to change { contact.reload.attributes }
+      end
+
+      it 'responds with unprocessable entity and errors' do
+        subject
+        expect(response.status).to eq(422)
+        expect(json_object).to eq({'name' => ["can't be blank"]})
+      end
+    end
+  end
 end

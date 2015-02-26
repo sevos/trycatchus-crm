@@ -10,6 +10,13 @@ class ContactsController < ApplicationController
     end
   end
 
+  def update
+    @contact = contacts.find(params[:id])
+    unless @contact.update_attributes contact_params
+      render_validation_errors(@contact)
+    end
+  end
+
   private
 
   def render_validation_errors(model)
