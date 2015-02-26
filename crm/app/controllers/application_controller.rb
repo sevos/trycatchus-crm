@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
 
+  before_action :authenticate!
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   private
@@ -14,5 +15,11 @@ class ApplicationController < ActionController::Base
   def render_validation_errors(model)
     render json: {model.class.name.underscore => model.errors},
            status: :unprocessable_entity
+  end
+
+  attr_reader :current_user
+
+  def authenticate!
+    @current_user = Guest.new
   end
 end
