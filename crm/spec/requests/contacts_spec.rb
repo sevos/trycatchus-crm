@@ -114,6 +114,22 @@ RSpec.describe '/contacts' do
         subject
         expect(response.status).to eq(403)
       end
+
+      context 'when logged in as an admin' do
+        before do
+          create(:admin, name: 'admin')
+          login 'admin', 'qwerty'
+        end
+
+        it 'destroys the contact' do
+          expect { subject }.to change { Contact.count }.by(-1)
+        end
+
+        it 'responds with :no_content' do
+          subject
+          expect(response.status).to eq(204)
+        end
+      end
     end
   end
 end

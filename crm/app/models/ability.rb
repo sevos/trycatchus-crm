@@ -4,6 +4,8 @@ class Ability
   def initialize(user)
     can :read, :all
     case user
+    when Admin
+      can :manage, :all
     when User
       can :manage, [Contact, Note], owner_id: user.id
     end
