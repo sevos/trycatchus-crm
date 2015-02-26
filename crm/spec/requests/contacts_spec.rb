@@ -84,4 +84,18 @@ RSpec.describe '/contacts' do
       end
     end
   end
+
+  describe 'DELETE /contacts/:id.json' do
+    let!(:contact) { create(:contact) }
+    subject { delete "/contacts/#{contact.id}", format: 'json' }
+
+    it 'destroys the contact' do
+      expect { subject }.to change { Contact.count }.by(-1)
+    end
+
+    it 'responds with :no_content' do
+      subject
+      expect(response.status).to eq(204)
+    end
+  end
 end

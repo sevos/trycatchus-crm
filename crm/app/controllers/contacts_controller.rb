@@ -11,10 +11,15 @@ class ContactsController < ApplicationController
   end
 
   def update
-    @contact = contacts.find(params[:id])
+    @contact = contact
     unless @contact.update_attributes contact_params
       render_validation_errors(@contact)
     end
+  end
+
+  def destroy
+    contact.destroy
+    render nothing: true, status: :no_content
   end
 
   private
@@ -22,6 +27,10 @@ class ContactsController < ApplicationController
   def render_validation_errors(model)
     render json: {model.class.name.underscore => model.errors},
            status: :unprocessable_entity
+  end
+
+  def contact
+    contacts.find(params[:id])
   end
 
   def contacts
