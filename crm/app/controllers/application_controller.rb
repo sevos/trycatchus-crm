@@ -10,4 +10,9 @@ class ApplicationController < ActionController::Base
   def render_not_found
     render nothing: true, status: :not_found
   end
+
+  def render_validation_errors(model)
+    render json: {model.class.name.underscore => model.errors},
+           status: :unprocessable_entity
+  end
 end
