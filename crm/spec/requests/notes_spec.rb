@@ -1,0 +1,35 @@
+require 'rails_helper'
+
+RSpec.describe '/contacts/:contact_id/notes' do
+  extend JsonApiHelper
+  setup_endpoint 'note', visible_attributes: %w(id contact_id title description)
+  let(:contact) { create(:contact) }
+
+  describe 'POST /contacts/:id/notes' do
+    subject {
+      post "/contacts/#{contact.id}/notes",
+           object_name => attributes, format: 'json'
+    }
+
+    before { subject }
+
+    context 'with valid attributes' do
+      let(:attributes) { attributes_for(:note).stringify_keys }
+
+      it 'responds with created note' do
+        expected = attributes.merge('id' => Note.last.id,
+                                    'contact_id' => contact.id)
+        expect(json_object).to eq(expected)
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:attributes) { attributes_for(:note).except(:title).stringify_keys }
+
+      it 'responds with unprocessable entity and errors' do
+        expect(response.status).to eq(422)
+        expect(json_object).to eq({'title' => ["can't be blank"]})
+      end
+    end
+  end
+end
