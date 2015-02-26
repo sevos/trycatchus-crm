@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe '/contacts' do
-  extend JsonApiHelper
+  include JsonApiHelper
+  before { login_user }
   setup_endpoint 'contact', visible_attributes: %w(id name phone email website_url description)
 
   describe 'POST /contacts.json' do
-    subject { post '/contacts', {object_name => attributes, format: 'json'} }
+    subject { post '/contacts', {object_name => attributes, format: 'json'}, @env }
 
     before { subject }
 
@@ -29,7 +30,7 @@ RSpec.describe '/contacts' do
   end
 
   describe 'GET /contacts.json' do
-    subject { get '/contacts.json' }
+    subject { get '/contacts.json', {}, @env }
 
     it 'returns empty list' do
       subject
@@ -51,7 +52,7 @@ RSpec.describe '/contacts' do
   describe 'PATCH /contacts/:id.json' do
     let!(:contact) { create(:contact) }
 
-    subject { patch "/contacts/#{contact.id}", {object_name => attributes, format: 'json'} }
+    subject { patch "/contacts/#{contact.id}", {object_name => attributes, format: 'json'}, @env }
 
     context 'with valid attributes' do
       let(:attributes) { {'name' => 'TryCatch.us'} }
@@ -89,7 +90,7 @@ RSpec.describe '/contacts' do
 
   describe 'DELETE /contacts/:id.json' do
     let!(:contact) { create(:contact) }
-    subject { delete "/contacts/#{contact.id}", format: 'json' }
+    subject { delete "/contacts/#{contact.id}", {format: 'json'}, @env }
 
     it 'destroys the contact' do
       expect { subject }.to change { Contact.count }.by(-1)

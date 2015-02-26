@@ -1,14 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe '/contacts/:contact_id/notes' do
-  extend JsonApiHelper
+  include JsonApiHelper
+  before { login_user }
   setup_endpoint 'note', visible_attributes: %w(id contact_id title description)
   let(:contact) { create(:contact) }
 
   describe 'POST /contacts/:id/notes' do
     subject {
       post "/contacts/#{contact.id}/notes",
-           object_name => attributes, format: 'json'
+           {object_name => attributes, format: 'json'}, @env
     }
 
     before { subject }
@@ -35,7 +36,7 @@ RSpec.describe '/contacts/:contact_id/notes' do
 
   describe 'GET /contacts/:id/notes' do
     let!(:another_note) { create(:note) }
-    subject { get "/contacts/#{contact.id}/notes", format: 'json' }
+    subject { get "/contacts/#{contact.id}/notes", {format: 'json'}, @env }
 
     it 'returns empty list' do
       subject

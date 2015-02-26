@@ -1,19 +1,20 @@
 class ContactsController < ApplicationController
+  load_and_authorize_resource
+
   def index
     @contacts = contacts.to_a
   end
 
   def create
     @contact = contacts.new(contact_params)
-    unless @contact.save
-      render_validation_errors(@contact)
+    unless contact.save
+      render_validation_errors(contact)
     end
   end
 
   def update
-    @contact = contact
-    unless @contact.update_attributes contact_params
-      render_validation_errors(@contact)
+    unless contact.update_attributes contact_params
+      render_validation_errors(contact)
     end
   end
 
@@ -25,7 +26,7 @@ class ContactsController < ApplicationController
   private
 
   def contact
-    contacts.find(params[:id])
+    @contact ||= contacts.find(params[:id])
   end
 
   def contacts

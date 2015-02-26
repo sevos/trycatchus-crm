@@ -1,13 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe '/users' do
-  extend JsonApiHelper
-
-  def login(user_name, password)
-    @env ||= {}
-    @env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(user_name, password)
-    @env
-  end
+  include JsonApiHelper
 
   setup_endpoint 'user', visible_attributes: %w(name level)
 

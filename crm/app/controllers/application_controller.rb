@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate!
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  check_authorization
 
   private
 
