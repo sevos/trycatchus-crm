@@ -44,6 +44,7 @@ group :development, :test do
 
   # Test framework
   gem 'rspec-rails'
+  gem 'shoulda-matchers', require: false
 
   # Fixtures replacement
   gem 'factory_girl_rails'
