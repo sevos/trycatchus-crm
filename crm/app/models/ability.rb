@@ -5,7 +5,7 @@ class Ability
     can :read, :all
     case user
     when User
-      can :manage, [Contact, Note]
+      can :manage, [Contact, Note], owner_id: user.id
     end
     # Define abilities for the passed in user here. For example:
     #

@@ -22,6 +22,10 @@ RSpec.describe '/contacts/:contact_id/notes' do
                                     'contact_id' => contact.id)
         expect(json_object).to eq(expected)
       end
+
+      it 'creates a note owned by current user' do
+        expect(Note.last.owner).to eq(current_user)
+      end
     end
 
     context 'with invalid attributes' do

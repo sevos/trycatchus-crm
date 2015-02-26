@@ -7,6 +7,7 @@ FactoryGirl.define do
     phone "+491111222333"
     website_url "http://example.com"
     email
+    association(:owner, factory: :user)
     description nil
   end
 

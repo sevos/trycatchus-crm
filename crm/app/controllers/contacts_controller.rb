@@ -35,6 +35,7 @@ class ContactsController < ApplicationController
 
   def contact_params
     params.require(:contact).permit(:name, :phone, :description,
-                                    :website_url, :email)
+                                    :website_url, :email).
+      merge(owner: current_user)
   end
 end

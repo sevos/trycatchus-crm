@@ -17,6 +17,10 @@ RSpec.describe '/contacts' do
         expected = attributes.merge('id' => Contact.last.id)
         expect(json_object).to eq(expected)
       end
+
+      it 'creates a contact owned by current user' do
+        expect(Contact.last.owner).to eq(current_user)
+      end
     end
 
     context 'with missing name' do
@@ -50,7 +54,7 @@ RSpec.describe '/contacts' do
 
 
   describe 'PATCH /contacts/:id.json' do
-    let!(:contact) { create(:contact) }
+    let!(:contact) { create(:contact, owner: current_user) }
 
     subject { patch "/contacts/#{contact.id}", {object_name => attributes, format: 'json'}, @env }
 
@@ -89,7 +93,7 @@ RSpec.describe '/contacts' do
   end
 
   describe 'DELETE /contacts/:id.json' do
-    let!(:contact) { create(:contact) }
+    let!(:contact) { create(:contact, owner: current_user) }
     subject { delete "/contacts/#{contact.id}", {format: 'json'}, @env }
 
     it 'destroys the contact' do

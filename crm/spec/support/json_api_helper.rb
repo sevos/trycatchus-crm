@@ -18,11 +18,11 @@ module JsonApiHelper
   end
 
   def login_user
-    create(:user, name: 'user',
-           password: 'qwerty',
-           password_confirmation: 'qwerty')
+    @current_user = create(:user, name: 'user')
     login 'user', 'qwerty'
   end
+
+  attr_reader :current_user
 
 end
 
