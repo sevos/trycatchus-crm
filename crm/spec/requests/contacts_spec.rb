@@ -1,11 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe '/contacts' do
-  let(:json_response) { JSON.parse(response.body) }
-  let(:object_name) { 'contact' }
-  let(:json_object) { json_response.fetch(object_name) }
-  let(:json_collection) { json_response.fetch(object_name.pluralize) }
-  let(:visible_attributes) { %w(id name phone email website_url description) }
+  extend JsonApiHelper
+  setup_endpoint 'contact', visible_attributes: %w(id name phone email website_url description)
 
   describe 'POST /contacts.json' do
     subject { post '/contacts', {object_name => attributes, format: 'json'} }
@@ -50,16 +47,6 @@ RSpec.describe '/contacts' do
     end
   end
 
-  shared_examples 'respond with 404 when contact does not exist' do
-    context 'when contact does not exist' do
-      before { contact.destroy }
-
-      it 'responds with :not_found' do
-        subject
-        expect(response.status).to eq(404)
-      end
-    end
-  end
 
   describe 'PATCH /contacts/:id.json' do
     let!(:contact) { create(:contact) }
@@ -80,7 +67,7 @@ RSpec.describe '/contacts' do
         expect(json_object).to eq(expected)
       end
 
-      include_examples 'respond with 404 when contact does not exist'
+      include_examples 'respond with 404 when object does not exist'
     end
 
     context 'with invalid attributes' do
@@ -96,7 +83,7 @@ RSpec.describe '/contacts' do
         expect(json_object).to eq({'name' => ["can't be blank"]})
       end
 
-      include_examples 'respond with 404 when contact does not exist'
+      include_examples 'respond with 404 when object does not exist'
     end
   end
 
@@ -113,6 +100,6 @@ RSpec.describe '/contacts' do
       expect(response.status).to eq(204)
     end
 
-    include_examples 'respond with 404 when contact does not exist'
+    include_examples 'respond with 404 when object does not exist'
   end
 end
