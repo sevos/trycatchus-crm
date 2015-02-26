@@ -50,6 +50,17 @@ RSpec.describe '/contacts' do
     end
   end
 
+  shared_examples 'respond with 404 when contact does not exist' do
+    context 'when contact does not exist' do
+      before { contact.destroy }
+
+      it 'responds with :not_found' do
+        subject
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe 'PATCH /contacts/:id.json' do
     let!(:contact) { create(:contact) }
 
@@ -68,6 +79,8 @@ RSpec.describe '/contacts' do
         subject
         expect(json_object).to eq(expected)
       end
+
+      include_examples 'respond with 404 when contact does not exist'
     end
 
     context 'with invalid attributes' do
@@ -82,6 +95,8 @@ RSpec.describe '/contacts' do
         expect(response.status).to eq(422)
         expect(json_object).to eq({'name' => ["can't be blank"]})
       end
+
+      include_examples 'respond with 404 when contact does not exist'
     end
   end
 
@@ -97,5 +112,7 @@ RSpec.describe '/contacts' do
       subject
       expect(response.status).to eq(204)
     end
+
+    include_examples 'respond with 404 when contact does not exist'
   end
 end
