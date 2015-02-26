@@ -106,5 +106,14 @@ RSpec.describe '/contacts' do
     end
 
     include_examples 'respond with 404 when object does not exist'
+
+    context 'when resource belongs to another user' do
+      let!(:contact) { create(:contact) }
+
+      it 'returns forbidden' do
+        subject
+        expect(response.status).to eq(403)
+      end
+    end
   end
 end

@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate!
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from CanCan::AccessDenied, with: :render_forbidden
   check_authorization
 
   private
@@ -20,6 +21,10 @@ class ApplicationController < ActionController::Base
 
   def render_unauthorized
     render nothing: true, status: :unauthorized
+  end
+
+  def render_forbidden
+    render nothing: true, status: :forbidden
   end
 
   attr_reader :current_user
