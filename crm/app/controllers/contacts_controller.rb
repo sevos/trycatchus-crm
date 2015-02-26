@@ -1,4 +1,8 @@
 class ContactsController < ApplicationController
+  def index
+    @contacts = contacts.to_a
+  end
+
   def create
     @contact = contacts.new(contact_params)
     unless @contact.save
@@ -14,7 +18,7 @@ class ContactsController < ApplicationController
   end
 
   def contacts
-    Contact
+    Contact.all
   end
 
   def contact_params
