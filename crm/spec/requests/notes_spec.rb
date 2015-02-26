@@ -32,4 +32,24 @@ RSpec.describe '/contacts/:contact_id/notes' do
       end
     end
   end
+
+  describe 'GET /contacts/:id/notes' do
+    let!(:another_note) { create(:note) }
+    subject { get "/contacts/#{contact.id}/notes", format: 'json' }
+
+    it 'returns empty list' do
+      subject
+      expect(json_collection).to be_empty
+    end
+
+    context 'when a note has been created on the contact' do
+      let!(:note) { create(:note, contact: contact) }
+
+      it 'returns the note' do
+        expected = note.attributes.slice(*visible_attributes)
+        subject
+        expect(json_collection[0]).to eq(expected)
+      end
+    end
+  end
 end

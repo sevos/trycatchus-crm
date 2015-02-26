@@ -6,6 +6,10 @@ class NotesController < ApplicationController
     end
   end
 
+  def index
+    @notes = notes
+  end
+
   private
 
   def notes
