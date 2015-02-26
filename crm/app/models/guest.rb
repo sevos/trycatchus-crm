@@ -4,6 +4,6 @@ class Guest
   end
 
   def type
-    'guest'
+    'Guest'
   end
 end

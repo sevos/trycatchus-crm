@@ -17,9 +17,21 @@ class ApplicationController < ActionController::Base
            status: :unprocessable_entity
   end
 
+  def render_unauthorized
+    render nothing: true, status: :unauthorized
+  end
+
   attr_reader :current_user
 
   def authenticate!
     @current_user = Guest.new
+    authenticate_with_http_basic do |user_name, password|
+      user = User.find_by(name: user_name)
+      if user && user.authenticate(password)
+        @current_user = user
+      else
+        render_unauthorized
+      end
+    end
   end
 end
